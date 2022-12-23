@@ -7,9 +7,6 @@ const Form = () => {
       username: '',
       password: '',
     },
-    onSubmit: (values) => {
-      alert(JSON.stringify(values, null, 2));
-    },
   });
   return (
     <form className="mt-3 mt-mb-0" onSubmit={formik.handleSubmit}>
