@@ -8,4 +8,4 @@ build:
 	npm build
 
 lint:
-	npx eslint --ext .jsx --ext .js --fix .
+	npx eslint --fix .
