@@ -1,15 +1,19 @@
 import React from 'react';
 import ReactDOM from 'react-dom/client';
 import './index.css';
-import App from './App.jsx';
+import { io } from 'socket.io-client';
 import reportWebVitals from './reportWebVitals';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import 'react-bootstrap/dist/react-bootstrap';
+import './App.css';
+import initApp from './initApp.js';
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
+const socket = io();
+const app = initApp(socket);
 root.render(
   <React.StrictMode>
-    <App />
+    {app}
   </React.StrictMode>,
 );
 
