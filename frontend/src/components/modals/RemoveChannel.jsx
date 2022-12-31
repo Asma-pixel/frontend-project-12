@@ -6,7 +6,8 @@ const AddChannel = () => {
   const formik = useFormik({
     initialValues: { body: '' },
     onSubmit: (values) => {
-      console.log(values);
+      const a = values;
+      return a;
     },
   });
 

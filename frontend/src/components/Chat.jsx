@@ -36,7 +36,7 @@ const ChatRoutes = () => {
   };
   useEffect(() => {
     getData();
-  }, []);
+  });
   if (isLoading) return null;
   return (
     auth.loggedIn ? <Chat /> : <Navigate to="/login" state={{ from: location }} />
