@@ -3,29 +3,40 @@ import { useFormik } from 'formik';
 import { Button, Form, Modal } from 'react-bootstrap';
 import { useDispatch, useSelector } from 'react-redux';
 import * as yup from 'yup';
+import { useTranslation } from 'react-i18next';
+import { toast } from 'react-toastify';
+import filter from 'leo-profanity';
 import { actions } from '../../store/modalsSlice';
 import { selectors } from '../../store/channelsSlice';
 import { useApi } from '../../hooks';
 
 const RenameChannel = () => {
+  const { t } = useTranslation();
   const dispatch = useDispatch();
   const api = useApi();
   const channels = useSelector(selectors.selectAll);
   const { channel } = useSelector((state) => state.modalsReducer);
   const channelsNames = channels.map((item) => item.name);
-  const channelSchema = yup.string().notOneOf(channelsNames).min(3).max(20);
+  const channelSchema = yup
+    .string()
+    .notOneOf(channelsNames, 'notUniqueField')
+    .min(3, 'incorrectFieldLenth')
+    .max(20, 'incorrectFieldLenth')
+    .required('emptyField');
 
   const handleResponse = (response) => {
     const { status } = response;
-    if (status !== 'ok') return;
+    if (status !== 'ok') return toast.error(t('generalErrors.network'));
     dispatch(actions.closeModal());
+    toast.success(t('toast.renameChannelSuccess'));
   };
   const formik = useFormik({
     initialValues: { body: channel.name },
     validationSchema: yup.object({ body: channelSchema }),
     onSubmit: (values, { setSubmitting }) => {
       setSubmitting(true);
-      api.renameChannel({ id: channel.id, name: values.body }, handleResponse);
+      const filteredName = filter.clean(values.body);
+      api.renameChannel({ id: channel.id, name: filteredName }, handleResponse);
       setSubmitting(false);
     },
     validateOnBlur: false,
@@ -43,7 +54,7 @@ const RenameChannel = () => {
   return (
     <Modal show onHide={closeModal}>
       <Modal.Header closeButton>
-        <Modal.Title>Переименовать канал</Modal.Title>
+        <Modal.Title>{t('modals.renameChannel.title')}</Modal.Title>
       </Modal.Header>
 
       <Modal.Body>
@@ -52,7 +63,6 @@ const RenameChannel = () => {
             <Form.Group>
               <Form.Control
                 isInvalid={!formik.isValid}
-                required
                 ref={inputRef}
                 onChange={formik.handleChange}
                 onBlur={formik.handleBlur}
@@ -61,12 +71,24 @@ const RenameChannel = () => {
                 name="body"
               />
               <Form.Control.Feedback type="invalid">
-                {!formik.isValid ? formik.errors.body : null}
+                {!formik.isValid && t(`modals.errors.${formik.errors.body}`)}
               </Form.Control.Feedback>
             </Form.Group>
             <div className="d-flex justify-content-end">
-              <Button type="submit" className="btn btn-primary">Отправить</Button>
-              <Button type="submit" className="me-2 btn btn-secondary" value="Отменить" onClick={closeModal}>Отменить</Button>
+              <Button
+                type="submit"
+                className="btn btn-primary"
+              >
+                {t('modals.renameChannel.renameBtn')}
+              </Button>
+              <Button
+                type="submit"
+                className="me-2 btn btn-secondary"
+                value="Отменить"
+                onClick={closeModal}
+              >
+                {t('modals.renameChannel.canselBtn')}
+              </Button>
             </div>
           </fieldset>
         </Form>

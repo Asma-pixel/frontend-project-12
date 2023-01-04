@@ -1,45 +1,58 @@
-import { useRef, useEffect } from 'react';
-import { useFormik } from 'formik';
-import { Button, Form, Modal } from 'react-bootstrap';
+import { Button, Modal } from 'react-bootstrap';
+import { useDispatch, useSelector } from 'react-redux';
+import { useState } from 'react';
+import { useTranslation } from 'react-i18next';
+import { toast } from 'react-toastify';
+import { useApi } from '../../hooks';
+import { actions } from '../../store/modalsSlice';
 
-const AddChannel = () => {
-  const formik = useFormik({
-    initialValues: { body: '' },
-    onSubmit: (values) => {
-      const a = values;
-      return a;
-    },
-  });
-
-  const inputRef = useRef();
-  useEffect(() => {
-    inputRef.current.focus();
-  }, []);
-
+const RemoveChannel = () => {
+  const { t } = useTranslation();
+  const dispatch = useDispatch();
+  const api = useApi();
+  const [isDisabled, setDisabled] = useState(false);
+  const { channel } = useSelector((state) => state.modalsReducer);
+  const closeModal = () => {
+    dispatch(actions.closeModal());
+  };
+  const handleResponse = (response) => {
+    const { status } = response;
+    if (status !== 'ok') return toast.error(t('generalErrors.network'));
+    dispatch(actions.closeModal());
+    toast.success(t('toast.deleteChannelSuccess'));
+  };
+  const deleteChannel = () => {
+    setDisabled(true);
+    api.removeChannel({ id: channel.id }, handleResponse);
+    setDisabled(false);
+  };
   return (
-    <Modal show>
+    <Modal show onHide={closeModal}>
       <Modal.Header closeButton>
-        <Modal.Title>Удалить канал</Modal.Title>
+        <Modal.Title>{t('modals.removeChannel.title')}</Modal.Title>
       </Modal.Header>
 
       <Modal.Body>
-        <Form onSubmit={formik.handleSubmit}>
-          <Form.Group>
-            <Form.Control
-              required
-              ref={inputRef}
-              onChange={formik.handleChange}
-              onBlur={formik.handleBlur}
-              value={formik.values.body}
-              data-testid="input-body"
-              name="body"
-            />
-          </Form.Group>
-          <Button type="submit" className="btn btn-primary mt-2" value="Добавить" />
-        </Form>
+        <p className="lead">{t('modals.removeChannel.body')}</p>
+        <div className="d-flex justify-content-end">
+          <fieldset disabled={isDisabled}>
+            <Button
+              className="me-2 btn btn-secondary"
+              onClick={closeModal}
+            >
+              {t('modals.removeChannel.canselBtn')}
+            </Button>
+            <Button
+              className="btn btn-danger"
+              onClick={deleteChannel}
+            >
+              {t('modals.removeChannel.deleteBtn')}
+            </Button>
+          </fieldset>
+        </div>
       </Modal.Body>
     </Modal>
   );
 };
 
-export default AddChannel;
+export default RemoveChannel;

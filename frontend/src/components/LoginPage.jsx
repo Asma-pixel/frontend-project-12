@@ -1,7 +1,8 @@
+import { useTranslation } from 'react-i18next';
 import LoginForm from './LoginForm.jsx';
 
 const LoginPage = () => {
-  const className = 'text-center';
+  const { t } = useTranslation();
   return (
     <div className="container-fluid h-100">
       <div className="row justify-content-center align-content-center h-100">
@@ -11,9 +12,9 @@ const LoginPage = () => {
               <LoginForm />
             </div>
             <div className="card-footer p-4">
-              <div className={className}>
-                <span>Нет аккаунта?</span>
-                <a href="/signup">Регистрация</a>
+              <div className="text-center">
+                <span>{t('loginPage.signupTitle')}</span>
+                <a href="/signup">{t('loginPage.signupLink')}</a>
               </div>
             </div>
           </div>

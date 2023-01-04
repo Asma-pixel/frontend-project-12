@@ -2,12 +2,14 @@ import {
   createBrowserRouter, RouterProvider,
 } from 'react-router-dom';
 import { useState } from 'react';
+import { ToastContainer } from 'react-toastify';
 import { AuthContext, ApiContext } from './contexts/index.jsx';
 
 import ChatRoutes from './components/Chat.jsx';
 import NavBar from './components/Navbar.jsx';
-import NoMatchPage from './components/NoMatchPage.jsx';
+import NoFoundPage from './components/NoFoundPage.jsx';
 import LoginPage from './components/LoginPage';
+import SignUpPage from './components/SignUpPage.jsx';
 
 const router = createBrowserRouter([
   {
@@ -19,8 +21,12 @@ const router = createBrowserRouter([
     element: <LoginPage />,
   },
   {
+    path: '/signup',
+    element: <SignUpPage />,
+  },
+  {
     path: '*',
-    element: <NoMatchPage />,
+    element: <NoFoundPage />,
   },
 ]);
 
@@ -36,10 +42,8 @@ const ApiProvider = ({ children, socket }) => {
   const renameChannel = (channel, cb) => {
     socket.emit('renameChannel', channel, cb);
   };
-  const removeChannel = (id) => {
-    socket.emit('removeChannel', id, (response) => {
-      console.log(response);
-    });
+  const removeChannel = (id, cb) => {
+    socket.emit('removeChannel', id, cb);
   };
   return (
     <ApiContext.Provider value={{
@@ -55,7 +59,11 @@ const ApiProvider = ({ children, socket }) => {
 };
 const AuthProvider = ({ children }) => {
   const [loggedIn, setLoggedIn] = useState(false);
-  const logIn = () => setLoggedIn(true);
+  const logIn = (data = null) => {
+    setLoggedIn(true);
+    if (data === null) return;
+    localStorage.setItem('user', data);
+  };
   const logOut = () => {
     localStorage.removeItem('user');
     setLoggedIn(false);
@@ -67,7 +75,10 @@ const AuthProvider = ({ children }) => {
   // const loginInfo = useMemo(() => ({ loggedIn, logIn, logOut }), []);
   return (
     <AuthContext.Provider value={{
-      loggedIn, logIn, logOut, getUser,
+      loggedIn,
+      logIn,
+      logOut,
+      getUser,
     }}
     >
       {children}
@@ -81,6 +92,20 @@ const App = ({ socket }) => (
       <ApiProvider socket={socket}>
         <NavBar />
         <RouterProvider router={router} />
+        <ToastContainer
+          autoClose={5000}
+          closeOnClick
+          draggable
+          draggableDirection="x"
+          draggablePercent={80}
+          newestOnTop={false}
+          pauseOnFocusLoss
+          pauseOnHover
+          position="top-right"
+          role="alert"
+          rtl={false}
+          theme="light  "
+        />
       </ApiProvider>
     </AuthProvider>
   </div>

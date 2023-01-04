@@ -1,4 +1,5 @@
 import { useSelector } from 'react-redux';
+import { useTranslation } from 'react-i18next';
 import { selectors } from '../store/messagesSlice';
 import MessagesForm from './MessagesForm';
 import { selectors as channelSelectors } from '../store/channelsSlice';
@@ -10,26 +11,22 @@ const Message = ({ author, text }) => (
   </div>
 );
 const MesagesBox = ({ channelId }) => {
+  const { t } = useTranslation();
   const messages = useSelector(selectors.selectAll);
   const currentChannel = useSelector((state) => channelSelectors
     .selectById(state, channelId));
   const currentMessages = messages.filter((message) => message.channelId === channelId);
-
   return (
     <div className="col p-0 h-100">
       <div className="d-flex flex-column h-100">
         <div className="bg-light mb-4 p-3 shadow-sm small">
           <p className="m-0">
             <b>
-              #
-              {' '}
-              {currentChannel?.name}
+              {`# ${currentChannel?.name}`}
             </b>
           </p>
           <span className="text-muted">
-            {currentMessages.length}
-            {' '}
-            сообщений
+            {t('chat.countMessages', { count: currentMessages.length })}
           </span>
         </div>
         <div id="messages-box" className="chat-messages overflow-auto px-5 ">

@@ -1,10 +1,14 @@
 import { Provider } from 'react-redux';
+import i18next from 'i18next';
+import { initReactI18next, I18nextProvider } from 'react-i18next';
+import filter from 'leo-profanity';
 import { actions as channelsActions } from './store/channelsSlice';
 import { actions as messagesActions } from './store/messagesSlice';
 import store from './store/index.js';
 import App from './App.jsx';
+import resources from './locales/index.js';
 
-const initApp = (socket) => {
+const initApp = async (socket) => {
   const { dispatch } = store;
   socket.on('newMessage', (message) => {
     dispatch(messagesActions.addMessage(message));
@@ -21,10 +25,23 @@ const initApp = (socket) => {
   socket.on('removeChannel', ({ id }) => {
     dispatch(channelsActions.removeChannel(id));
   });
-
+  const i18nextInstance = i18next.createInstance();
+  await i18nextInstance
+    .use(initReactI18next)
+    .init({
+      debug: false,
+      fallbackLng: 'ru',
+      interpolation: {
+        escapeValue: false,
+      },
+      resources,
+    });
+  filter.add(filter.getDictionary('ru'));
   return (
     <Provider store={store}>
-      <App socket={socket} />
+      <I18nextProvider i18n={i18nextInstance}>
+        <App socket={socket} />
+      </I18nextProvider>
     </Provider>
   );
 };
