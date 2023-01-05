@@ -1,7 +1,9 @@
 import { Provider } from 'react-redux';
+import { Provider as RollBarProvider, ErrorBoundary } from '@rollbar/react';
 import i18next from 'i18next';
 import { initReactI18next, I18nextProvider } from 'react-i18next';
 import filter from 'leo-profanity';
+
 import { actions as channelsActions } from './store/channelsSlice';
 import { actions as messagesActions } from './store/messagesSlice';
 import store from './store/index.js';
@@ -37,12 +39,20 @@ const initApp = async (socket) => {
       resources,
     });
   filter.add(filter.getDictionary('ru'));
+  const rollbarConfig = {
+    accessToken: process.env.ROLLBAR_TOKEN,
+    environment: 'production',
+  };
   return (
-    <Provider store={store}>
-      <I18nextProvider i18n={i18nextInstance}>
-        <App socket={socket} />
-      </I18nextProvider>
-    </Provider>
+    <RollBarProvider config={rollbarConfig}>
+      <ErrorBoundary>
+        <Provider store={store}>
+          <I18nextProvider i18n={i18nextInstance}>
+            <App socket={socket} />
+          </I18nextProvider>
+        </Provider>
+      </ErrorBoundary>
+    </RollBarProvider>
   );
 };
 

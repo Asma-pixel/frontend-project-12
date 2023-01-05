@@ -25,7 +25,6 @@ const AddChannel = () => {
 
   const handleResponse = (response) => {
     const { status, data } = response;
-    console.log(status);
     if (status !== 'ok') return toast.error(t('generalErrors.network'));
     const { id } = data;
     dispatch(channelsActions.setCurrentChannel(id));
