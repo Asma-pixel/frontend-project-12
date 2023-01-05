@@ -45,7 +45,7 @@ const initApp = async (socket) => {
   };
   function TestMethod() {
     const n = '';
-    n.с();
+    n.h();
   }
   return (
     <RollBarProvider config={rollbarConfig}>
