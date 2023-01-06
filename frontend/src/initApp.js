@@ -43,14 +43,9 @@ const initApp = async (socket) => {
     accessToken: process.env.REACT_APP_ROLLBAR_TOKEN,
     environment: 'production',
   };
-  function TestMethod() {
-    const n = '';
-    n.h();
-  }
   return (
     <RollBarProvider config={rollbarConfig}>
       <ErrorBoundary>
-        <TestMethod />
         <Provider store={store}>
           <I18nextProvider i18n={i18nextInstance}>
             <App socket={socket} />
