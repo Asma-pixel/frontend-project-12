@@ -39,7 +39,7 @@ const ChannelLink = ({ channel, channelId }) => {
       >
         {renderInitialChannel()}
         <Dropdown.Toggle variant="" className={btnDropDown}>
-          <span className="visually-hidden">АОА</span>
+          <span className="visually-hidden">{t('chat.editChannel')}</span>
         </Dropdown.Toggle>
         <Dropdown.Menu>
           <Dropdown.Item onClick={openModal('RemoveChannel', channel)}>

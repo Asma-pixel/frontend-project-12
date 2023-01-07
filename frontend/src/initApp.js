@@ -32,9 +32,6 @@ const initApp = async (socket) => {
     .init({
       debug: false,
       fallbackLng: 'ru',
-      interpolation: {
-        escapeValue: false,
-      },
       resources,
     });
   filter.add(filter.getDictionary('ru'));

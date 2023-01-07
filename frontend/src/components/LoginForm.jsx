@@ -41,36 +41,36 @@ const LoginForm = () => {
     <Form className="mt-3 mt-mb-0" onSubmit={formik.handleSubmit}>
       <h1 className="text-center mb-4">{t('loginPage.title')}</h1>
       <fieldset disabled={formik.isSubmitting}>
-        <Form.Group className="mb-3">
-          <Form.FloatingLabel htmlFor="username" label={t('loginPage.usernameLabel')}>
-            <Form.Control
-              onChange={formik.handleChange}
-              value={formik.values.username}
-              placeholder="username"
-              name="username"
-              id="username"
-              autoComplete="username"
-              isInvalid={authFailed}
-              required
-            />
-          </Form.FloatingLabel>
+        <Form.Group className="form-floating mb-3">
+          <Form.Control
+            onChange={formik.handleChange}
+            value={formik.values.username}
+            placeholder="username"
+            name="username"
+            id="username"
+            autoComplete="username"
+            isInvalid={authFailed}
+            required
+          />
+          <Form.Label htmlFor="username">{t('loginPage.usernameLabel')}</Form.Label>
         </Form.Group>
-        <Form.Group className="mb-4">
-          <Form.FloatingLabel htmlFor="password" label={t('loginPage.passwordLabel')}>
-            <Form.Control
-              type="password"
-              onChange={formik.handleChange}
-              value={formik.values.password}
-              placeholder="password"
-              name="password"
-              id="password"
-              autoComplete="current-password"
-              isInvalid={authFailed}
-              required
-            />
-            <Form.Control.Feedback tooltip className="invalid-tooltip">{t('loginPage.errors.userNotFound')}</Form.Control.Feedback>
-          </Form.FloatingLabel>
+        <Form.Group className="form-floating mb-3">
+          <Form.Control
+            type="password"
+            onChange={formik.handleChange}
+            value={formik.values.password}
+            placeholder="password"
+            name="password"
+            id="password"
+            autoComplete="current-password"
+            isInvalid={authFailed}
+            required
+          />
+          <Form.Label htmlFor="password">
+            {t('loginPage.passwordLabel')}
 
+          </Form.Label>
+          <Form.Control.Feedback tooltip className="invalid-tooltip">{t('loginPage.errors.userNotFound')}</Form.Control.Feedback>
         </Form.Group>
         <Button type="submit" variant="outline-primary" className="w-100 mb-3 btn">{t('loginPage.btn')}</Button>
       </fieldset>

@@ -27,8 +27,6 @@ const SignUpForm = () => {
       confirmPassword: '',
     },
     validationSchema: validatePassword,
-    validateOnBlur: true,
-    validateOnChange: false,
     onSubmit: async (values, { setSubmitting }) => {
       setSubmitting(true);
       const { signUpPath } = routes;
@@ -49,8 +47,8 @@ const SignUpForm = () => {
   return (
     <Form onSubmit={formik.handleSubmit}>
       <h1 className="text-center mb-4">{t('signupPage.title')}</h1>
-      <Form.Group>
-        <Form.FloatingLabel htmlFor="username" className="mb-3" label={t('signupPage.usernameLabel')}>
+      <fieldset disabled={formik.isSubmitting}>
+        <Form.Group className="form-floating mb-3">
           <Form.Control
             onChange={formik.handleChange}
             onBlur={formik.handleBlur}
@@ -62,12 +60,14 @@ const SignUpForm = () => {
             autoComplete="username"
             required
           />
+          <Form.Label htmlFor="username" className="mb-3">
+            {t('signupPage.usernameLabel')}
+          </Form.Label>
           <Form.Control.Feedback type="invalid" tooltip>
             { t(`signupPage.errors.${formik.errors.username}`) }
           </Form.Control.Feedback>
-        </Form.FloatingLabel>
-
-        <Form.FloatingLabel htmlFor="password" label={t('signupPage.passwordLabel')} className="mb-3">
+        </Form.Group>
+        <Form.Group className="form-floating mb-3">
           <Form.Control
             type="password"
             onChange={formik.handleChange}
@@ -80,11 +80,12 @@ const SignUpForm = () => {
             autoComplete="current-password"
             required
           />
+          <Form.Label htmlFor="password">{t('signupPage.passwordLabel')}</Form.Label>
           <Form.Control.Feedback type="invalid" tooltip>
             { t(`signupPage.errors.${formik.errors.password}`) }
           </Form.Control.Feedback>
-        </Form.FloatingLabel>
-        <Form.FloatingLabel htmlFor="confirmPassword" className="mb-4" label={t('signupPage.confirmPasswordLabel')}>
+        </Form.Group>
+        <Form.Group className="form-floating mb-3">
           <Form.Control
             type="password"
             onChange={formik.handleChange}
@@ -97,12 +98,15 @@ const SignUpForm = () => {
             autoComplete="current-confirmPassword"
             required
           />
+          <Form.Label htmlFor="confirmPassword" className="mb-4">
+            {t('signupPage.confirmPasswordLabel')}
+          </Form.Label>
           <Form.Control.Feedback type="invalid" tooltip>
             { t(`signupPage.errors.${formik.errors.confirmPassword}`) }
           </Form.Control.Feedback>
-        </Form.FloatingLabel>
+        </Form.Group>
         <Button type="submit" variant="outline-primary" className="w-100">{t('signupPage.btn')}</Button>
-      </Form.Group>
+      </fieldset>
     </Form>
   );
 };

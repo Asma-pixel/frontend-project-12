@@ -75,7 +75,9 @@ const AddChannel = () => {
                 value={formik.values.body}
                 data-testid="input-body"
                 name="body"
+                id="body"
               />
+              <Form.Label className="visually-hidden" htmlFor="body">{t('modals.addChannel.label')}</Form.Label>
               <Form.Control.Feedback type="invalid">
                 {!formik.isValid && t(`modals.errors.${formik.errors.body}`)}
               </Form.Control.Feedback>

@@ -18,7 +18,7 @@ export default {
       usernameLabel: 'Ваш ник',
       passwordLabel: 'Пароль',
       errors: {
-        userNotFound: 'Неверное имя или пароль',
+        userNotFound: 'Неверные имя пользователя или пароль',
       },
     },
     signupPage: {
@@ -30,7 +30,7 @@ export default {
       errors: {
         emptyField: 'Обязательное поле',
         incorrectLengthUsername: 'От 3 до 20 символов',
-        toShortPassword: 'Не менее 6-и символов',
+        toShortPassword: 'Не менее 6 символов',
         passwordsNotEqual: 'Пароли должны совпадать',
         userExists: 'Такой пользователь уже существует',
       },
@@ -38,6 +38,7 @@ export default {
     chat: {
       channelsTitle: 'Каналы',
       addChannelSpan: '+',
+      editChannel: 'Управление каналом',
       removeChannel: 'Удалить',
       renameChannel: 'Переименовать',
       sendMessagePlaceholder: 'Введите сообщение...',
@@ -51,11 +52,13 @@ export default {
     modals: {
       addChannel: {
         title: 'Добавить канал',
+        label: 'Имя канала',
         canselBtn: 'Отменить',
         addBtn: 'Отправить',
       },
       renameChannel: {
         title: 'Переименовать канал',
+        label: 'Имя канала',
         canselBtn: 'Отменить',
         renameBtn: 'Отправить',
       },

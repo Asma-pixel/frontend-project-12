@@ -42,7 +42,7 @@ const ChatRoutes = () => {
   if (isLoading) {
     return (
       <div className="d-flex justify-content-center align-items-center h-100">
-        <Spinner animation="grow" size="lg" style={{ width: '7rem', height: '7rem' }} className="justify-self-center lg" />
+        <Spinner animation="border" variant="primary" style={{ width: '5rem', height: '5rem' }} className="justify-self-center lg" />
       </div>
     );
   }
