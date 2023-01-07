@@ -31,7 +31,7 @@ export default {
         emptyField: 'Обязательное поле',
         incorrectLengthUsername: 'От 3 до 20 символов',
         toShortPassword: 'Не менее 6-и символов',
-        passwordsNotEqual: 'Пароли не совпадают',
+        passwordsNotEqual: 'Пароли должны совпадать',
         userExists: 'Такой пользователь уже существует',
       },
     },
