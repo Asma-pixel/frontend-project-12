@@ -12,11 +12,11 @@ const MessagesForm = () => {
   const { currentChannelId } = useSelector((state) => state.channelsReducer);
   const [isDisabled, setDisabled] = useState(true);
   const [message, setMessage] = useState('');
-  const sendMessage = (e) => {
+  const sendMessage = async (e) => {
     e.preventDefault();
     const { username } = auth.getUser();
     const messageToServer = { channelId: currentChannelId, body: filter.clean(message), username };
-    api.addMessage(messageToServer);
+    await api.addMessage(messageToServer);
     setMessage('');
     setDisabled(true);
   };

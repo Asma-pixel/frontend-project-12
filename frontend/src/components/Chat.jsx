@@ -9,13 +9,7 @@ import MesagesBox from './MessagesBox.jsx';
 
 const Chat = () => {
   const { currentChannelId } = useSelector((state) => state.channelsReducer);
-  if (!currentChannelId) {
-    return (
-      <div className="d-flex justify-content-center align-items-center h-100">
-        <Spinner animation="grow" size="lg" style={{ width: '7rem', height: '7rem' }} className="justify-self-center lg" />
-      </div>
-    );
-  }
+  console.log(currentChannelId);
   return (
     <div className="container h-100 my-4 overflow-hidden rounded shadow">
       <div className="row h-100 bg-white flex-md-row">
@@ -35,7 +29,7 @@ const ChatRoutes = () => {
     try {
       const user = JSON.parse(localStorage.getItem('user'));
       if (user && user.token) {
-        dispatch(fetchData());
+        await dispatch(fetchData());
         auth.logIn();
       }
     } finally {
@@ -45,7 +39,13 @@ const ChatRoutes = () => {
   useEffect(() => {
     getData();
   });
-  if (isLoading) return <Spinner animation="grow" size="lg" />;
+  if (isLoading) {
+    return (
+      <div className="d-flex justify-content-center align-items-center h-100">
+        <Spinner animation="grow" size="lg" style={{ width: '7rem', height: '7rem' }} className="justify-self-center lg" />
+      </div>
+    );
+  }
   return (
     auth.loggedIn ? <Chat /> : <Navigate to="/login" state={{ from: location }} />
   );

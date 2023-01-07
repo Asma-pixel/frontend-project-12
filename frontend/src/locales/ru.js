@@ -1,7 +1,7 @@
 export default {
   translation: {
     navBar: {
-      title: 'My chat',
+      title: 'Hexlet Chat',
       logoutBtn: 'Выйти',
     },
     notFoundPage: {
