@@ -40,7 +40,6 @@ const SignUpForm = () => {
         navigate('/');
       } catch (e) {
         if (e.response.status === 409) return toast.error(t('signupPage.errors.userExists'));
-        if (e.isAxiosError) return toast.error(t('generalErrors.unknown'));
         toast.error(t('generalErrors.network'));
       }
       setSubmitting(false);

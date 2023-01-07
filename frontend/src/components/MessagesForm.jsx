@@ -22,8 +22,8 @@ const MessagesForm = () => {
   };
   const changeMessage = (e) => {
     const { value } = e.target;
-    if (value === '') return setDisabled(true);
     setMessage(e.target.value);
+    if (value === '') return setDisabled(true);
     setDisabled(false);
   };
   return (

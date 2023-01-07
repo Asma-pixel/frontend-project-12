@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useLocation, Navigate } from 'react-router-dom';
+import { Spinner } from 'react-bootstrap';
 import { useAuth } from '../hooks/index.jsx';
 import fetchData from '../store/fetchData.js';
 import Channels from './Channels.jsx';
@@ -8,6 +9,13 @@ import MesagesBox from './MessagesBox.jsx';
 
 const Chat = () => {
   const { currentChannelId } = useSelector((state) => state.channelsReducer);
+  if (!currentChannelId) {
+    return (
+      <div className="d-flex justify-content-center align-items-center h-100">
+        <Spinner animation="grow" size="lg" style={{ width: '7rem', height: '7rem' }} className="justify-self-center lg" />
+      </div>
+    );
+  }
   return (
     <div className="container h-100 my-4 overflow-hidden rounded shadow">
       <div className="row h-100 bg-white flex-md-row">
@@ -37,7 +45,7 @@ const ChatRoutes = () => {
   useEffect(() => {
     getData();
   });
-  if (isLoading) return null;
+  if (isLoading) return <Spinner animation="grow" size="lg" />;
   return (
     auth.loggedIn ? <Chat /> : <Navigate to="/login" state={{ from: location }} />
   );

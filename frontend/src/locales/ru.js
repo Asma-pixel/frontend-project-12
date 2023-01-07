@@ -8,8 +8,7 @@ export default {
       text: 404,
     },
     generalErrors: {
-      network: 'Ошибка сети',
-      unknown: 'Неизвестная ошибка',
+      network: 'Ошибка соеденения',
     },
     loginPage: {
       title: 'Войти',

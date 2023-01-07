@@ -36,8 +36,13 @@ const AddChannel = () => {
     validationSchema: yup.object({ body: channelSchema }),
     onSubmit: (values, { setSubmitting }) => {
       setSubmitting(true);
-      const filteredName = filter.clean(values.body);
-      api.addChannel({ name: filteredName }, handleResponse);
+      try {
+        const filteredName = filter.clean(values.body);
+        api.addChannel({ name: filteredName }, handleResponse);
+      } catch (e) {
+        toast.error(t('generalErrors.network'));
+      }
+
       setSubmitting(false);
     },
     validateOnBlur: false,

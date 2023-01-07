@@ -13,6 +13,7 @@ const LoginForm = () => {
   const auth = useAuth();
   const [authFailed, setAuthFailed] = useState(false);
   const navigate = useNavigate();
+  const { loginPath } = routes;
 
   const formik = useFormik({
     initialValues: {
@@ -23,13 +24,14 @@ const LoginForm = () => {
       setSubmitting(true);
       setAuthFailed(false);
       try {
-        const res = await axios.post(routes.loginPath(), values);
+        const res = await axios.post(loginPath(), values);
         const data = JSON.stringify(res.data);
         auth.logIn(data);
         navigate('/');
       } catch (e) {
-        setAuthFailed(true);
-        if (e.isAxiosError || e.response.status === 401) return toast.error(t('generalErrors.unknown'));
+        if (e.isAxiosError || e.response.status === 401) {
+          return setAuthFailed(true);
+        }
         toast.error(t('generalErrors.network'));
       }
       setSubmitting(false);
