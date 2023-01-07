@@ -44,6 +44,7 @@ export default {
       sendMessageBtn: 'Send',
       countMessages_one: '{{count}} message',
       countMessages_other: '{{count}} messages',
+      sendMessageAriaLabel: 'New message',
     },
     modals: {
       addChannel: {

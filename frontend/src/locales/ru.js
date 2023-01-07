@@ -41,6 +41,7 @@ export default {
       removeChannel: 'Удалить',
       renameChannel: 'Переименовать',
       sendMessagePlaceholder: 'Введите сообщение...',
+      sendMessageAriaLabel: 'Новое сообщение',
       sendMessageBtn: 'Отправить',
       countMessages_zero: '{{count}} сообщений',
       countMessages_one: '{{count}} сообщение',

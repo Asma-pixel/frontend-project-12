@@ -35,6 +35,7 @@ const MessagesForm = () => {
             onChange={changeMessage}
             value={message}
             placeholder={t('chat.sendMessagePlaceholder')}
+            aria-label={t('chat.sendMessageAriaLabel')}
             name="text"
             id="text"
             required
