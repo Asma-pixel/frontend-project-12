@@ -19,7 +19,7 @@ const RemoveChannel = () => {
     const { status } = response;
     if (status !== 'ok') return toast.error(t('generalErrors.network'));
     dispatch(actions.closeModal());
-    toast.success(t('toast.deleteChannelSuccess'));
+    return toast.success(t('toast.deleteChannelSuccess'));
   };
   const deleteChannel = () => {
     setDisabled(true);
@@ -28,7 +28,7 @@ const RemoveChannel = () => {
     } catch (e) {
       toast.error(t('generalErrors.network'));
     }
-    setDisabled(false);
+    return setDisabled(false);
   };
   return (
     <Modal show onHide={closeModal}>

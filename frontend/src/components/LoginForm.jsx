@@ -34,7 +34,7 @@ const LoginForm = () => {
         }
         toast.error(t('generalErrors.network'));
       }
-      setSubmitting(false);
+      return setSubmitting(false);
     },
   });
   return (

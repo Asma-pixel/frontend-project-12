@@ -28,7 +28,7 @@ const RenameChannel = () => {
     const { status } = response;
     if (status !== 'ok') return toast.error(t('generalErrors.network'));
     dispatch(actions.closeModal());
-    toast.success(t('toast.renameChannelSuccess'));
+    return toast.success(t('toast.renameChannelSuccess'));
   };
   const formik = useFormik({
     initialValues: { body: channel.name },
@@ -41,7 +41,7 @@ const RenameChannel = () => {
       } catch (e) {
         toast.error(t('generalErrors.network'));
       }
-      setSubmitting(false);
+      return setSubmitting(false);
     },
     validateOnBlur: false,
     validateOnChange: false,

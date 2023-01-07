@@ -24,7 +24,7 @@ const MessagesForm = () => {
     const { value } = e.target;
     setMessage(e.target.value);
     if (value === '') return setDisabled(true);
-    setDisabled(false);
+    return setDisabled(false);
   };
   return (
     <div className="mt-auto px-5 py-3">
@@ -48,7 +48,6 @@ const MessagesForm = () => {
         </InputGroup>
       </Form>
     </div>
-
   );
 };
 

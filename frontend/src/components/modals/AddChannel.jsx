@@ -29,7 +29,7 @@ const AddChannel = () => {
     const { id } = data;
     dispatch(channelsActions.setCurrentChannel(id));
     dispatch(actions.closeModal());
-    toast.success(t('toast.addChannelSuccess'));
+    return toast.success(t('toast.addChannelSuccess'));
   };
   const formik = useFormik({
     initialValues: { body: '' },

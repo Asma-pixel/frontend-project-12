@@ -40,7 +40,7 @@ const SignUpForm = () => {
         if (e.response.status === 409) return toast.error(t('signupPage.errors.userExists'));
         toast.error(t('generalErrors.network'));
       }
-      setSubmitting(false);
+      return setSubmitting(false);
     },
   });
   console.log(formik.errors);

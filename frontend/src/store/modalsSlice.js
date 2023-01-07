@@ -9,12 +9,14 @@ const modalsSlice = createSlice({
   initialState,
   reducers: {
     openModal: (state, { payload }) => {
-      state.type = payload.type;
-      state.channel = payload.channel || null;
+      const tempState = state;
+      tempState.type = payload.type;
+      tempState.channel = payload.channel || null;
     },
     closeModal: (state) => {
-      state.type = null;
-      state.channel = null;
+      const tempState = state;
+      tempState.type = null;
+      tempState.channel = null;
     },
   },
 });
