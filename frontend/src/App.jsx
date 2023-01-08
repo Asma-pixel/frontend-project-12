@@ -3,60 +3,33 @@ import {
 } from 'react-router-dom';
 import { useState } from 'react';
 import { ToastContainer } from 'react-toastify';
-import { AuthContext, ApiContext } from './contexts/index.jsx';
+import { AuthContext } from './contexts/index.jsx';
 
 import ChatRoutes from './components/Chat.jsx';
 import NavBar from './components/Navbar.jsx';
 import NoFoundPage from './components/NoFoundPage.jsx';
 import LoginPage from './components/LoginPage';
 import SignUpPage from './components/SignUpPage.jsx';
+import routes from './routes.js';
 
 const router = createBrowserRouter([
   {
-    path: '/',
+    path: routes.chatPagePath(),
     element: <ChatRoutes />,
   },
   {
-    path: '/login',
+    path: routes.loginPagePath(),
     element: <LoginPage />,
   },
   {
-    path: '/signup',
+    path: routes.signUpPagePath(),
     element: <SignUpPage />,
   },
   {
-    path: '*',
+    path: routes.noMatchPagePath(),
     element: <NoFoundPage />,
   },
 ]);
-
-const ApiProvider = ({ children, socket }) => {
-  const addMessage = (message) => {
-    socket.emit('newMessage', message, (response) => {
-      console.log(response);
-    });
-  };
-  const addChannel = (channel, cb) => {
-    socket.emit('newChannel', channel, cb);
-  };
-  const renameChannel = (channel, cb) => {
-    socket.emit('renameChannel', channel, cb);
-  };
-  const removeChannel = (id, cb) => {
-    socket.emit('removeChannel', id, cb);
-  };
-  return (
-    <ApiContext.Provider value={{
-      addMessage,
-      addChannel,
-      renameChannel,
-      removeChannel,
-    }}
-    >
-      {children}
-    </ApiContext.Provider>
-  );
-};
 const AuthProvider = ({ children }) => {
   const [loggedIn, setLoggedIn] = useState(false);
   const logIn = (data = null) => {
@@ -86,27 +59,25 @@ const AuthProvider = ({ children }) => {
   );
 };
 
-const App = ({ socket }) => (
+const App = () => (
   <div className="d-flex flex-column h-100">
     <AuthProvider>
-      <ApiProvider socket={socket}>
-        <NavBar />
-        <RouterProvider router={router} />
-        <ToastContainer
-          autoClose={5000}
-          closeOnClick
-          draggable
-          draggableDirection="x"
-          draggablePercent={80}
-          newestOnTop={false}
-          pauseOnFocusLoss
-          pauseOnHover
-          position="top-right"
-          role="alert"
-          rtl={false}
-          theme="light  "
-        />
-      </ApiProvider>
+      <NavBar />
+      <RouterProvider router={router} />
+      <ToastContainer
+        autoClose={5000}
+        closeOnClick
+        draggable
+        draggableDirection="x"
+        draggablePercent={80}
+        newestOnTop={false}
+        pauseOnFocusLoss
+        pauseOnHover
+        position="top-right"
+        role="alert"
+        rtl={false}
+        theme="light  "
+      />
     </AuthProvider>
   </div>
 );

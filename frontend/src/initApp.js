@@ -1,16 +1,22 @@
+import React from 'react';
+import ReactDOM from 'react-dom/client';
 import { Provider } from 'react-redux';
 import { Provider as RollBarProvider, ErrorBoundary } from '@rollbar/react';
 import i18next from 'i18next';
 import { initReactI18next, I18nextProvider } from 'react-i18next';
 import filter from 'leo-profanity';
+import { io } from 'socket.io-client';
 import { actions as channelsActions } from './store/channelsSlice';
 import { actions as messagesActions } from './store/messagesSlice';
 import store from './store/index.js';
 import App from './App.jsx';
 import resources from './locales/index.js';
+import { ApiContext } from './contexts';
 
-const initApp = async (socket) => {
+const initApp = async () => {
+  const root = ReactDOM.createRoot(document.getElementById('root'));
   const { dispatch } = store;
+  const socket = io();
   socket.on('newMessage', (message) => {
     dispatch(messagesActions.addMessage(message));
   });
@@ -26,6 +32,21 @@ const initApp = async (socket) => {
   socket.on('removeChannel', ({ id }) => {
     dispatch(channelsActions.removeChannel(id));
   });
+  const addMessage = (message) => {
+    socket.emit('newMessage', message, (response) => {
+      console.log(response);
+    });
+  };
+  const addChannel = (channel, cb) => {
+    socket.emit('newChannel', channel, cb);
+  };
+  const renameChannel = (channel, cb) => {
+    socket.emit('renameChannel', channel, cb);
+  };
+  const removeChannel = (id, cb) => {
+    socket.emit('removeChannel', id, cb);
+  };
+
   const i18nextInstance = i18next.createInstance();
   await i18nextInstance
     .use(initReactI18next)
@@ -40,16 +61,26 @@ const initApp = async (socket) => {
     accessToken: process.env.REACT_APP_ROLLBAR_TOKEN,
     environment: 'production',
   };
-  return (
-    <RollBarProvider config={rollbarConfig}>
-      <ErrorBoundary>
-        <Provider store={store}>
-          <I18nextProvider i18n={i18nextInstance}>
-            <App socket={socket} />
-          </I18nextProvider>
-        </Provider>
-      </ErrorBoundary>
-    </RollBarProvider>
+  root.render(
+    <React.StrictMode>
+      <RollBarProvider config={rollbarConfig}>
+        <ErrorBoundary>
+          <Provider store={store}>
+            <I18nextProvider i18n={i18nextInstance}>
+              <ApiContext.Provider value={{
+                addMessage,
+                addChannel,
+                renameChannel,
+                removeChannel,
+              }}
+              >
+                <App />
+              </ApiContext.Provider>
+            </I18nextProvider>
+          </Provider>
+        </ErrorBoundary>
+      </RollBarProvider>
+    </React.StrictMode>,
   );
 };
 

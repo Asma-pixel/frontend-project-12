@@ -5,4 +5,8 @@ export default {
   loginPath: () => getApiPath('login'),
   dataPath: () => getApiPath('data'),
   signUpPath: () => getApiPath('signup'),
+  loginPagePath: () => '/login',
+  chatPagePath: () => '/',
+  signUpPagePath: () => '/signup',
+  noMatchPagePath: () => '*',
 };
