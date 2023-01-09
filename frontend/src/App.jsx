@@ -1,5 +1,8 @@
 import {
-  createBrowserRouter, RouterProvider,
+  Route,
+  Routes,
+  Navigate,
+  BrowserRouter,
 } from 'react-router-dom';
 import { useState } from 'react';
 import { ToastContainer } from 'react-toastify';
@@ -11,59 +14,59 @@ import NoFoundPage from './components/NoFoundPage.jsx';
 import LoginPage from './components/LoginPage';
 import SignUpPage from './components/SignUpPage.jsx';
 import routes from './routes.js';
+import { useAuth } from './hooks/index.jsx';
 
-const router = createBrowserRouter([
-  {
-    path: routes.chatPagePath(),
-    element: <ChatRoutes />,
-  },
-  {
-    path: routes.loginPagePath(),
-    element: <LoginPage />,
-  },
-  {
-    path: routes.signUpPagePath(),
-    element: <SignUpPage />,
-  },
-  {
-    path: routes.noMatchPagePath(),
-    element: <NoFoundPage />,
-  },
-]);
 const AuthProvider = ({ children }) => {
-  const [loggedIn, setLoggedIn] = useState(false);
+  const userFromLocalStorage = JSON.parse(localStorage.getItem('user'));
+  const [user, setUser] = useState(userFromLocalStorage || null);
   const logIn = (data = null) => {
-    setLoggedIn(true);
-    if (data === null) return;
     localStorage.setItem('user', data);
+    setUser(data);
   };
   const logOut = () => {
     localStorage.removeItem('user');
-    setLoggedIn(false);
-  };
-  const getUser = () => {
-    const user = JSON.parse(localStorage.getItem('user'));
-    return { username: user.username, token: user.token };
   };
   // const loginInfo = useMemo(() => ({ loggedIn, logIn, logOut }), []);
   return (
     <AuthContext.Provider value={{
-      loggedIn,
       logIn,
       logOut,
-      getUser,
+      user,
     }}
     >
       {children}
     </AuthContext.Provider>
   );
 };
-
+const AuthChecker = () => {
+  const auth = useAuth();
+  return auth.user !== null ? <ChatRoutes /> : <Navigate to={routes.loginPagePath()} />;
+};
 const App = () => (
   <div className="d-flex flex-column h-100">
     <AuthProvider>
       <NavBar />
-      <RouterProvider router={router} />
+      <BrowserRouter>
+        <Routes>
+          <Route
+            path={routes.chatPagePath()}
+            element={<AuthChecker />}
+          />
+          <Route
+            path={routes.loginPagePath()}
+            element={<LoginPage />}
+          />
+          <Route
+            path={routes.signUpPagePath()}
+            element={<SignUpPage />}
+          />
+          <Route
+            path={routes.noMatchPagePath()}
+            element={<NoFoundPage />}
+          />
+        </Routes>
+      </BrowserRouter>
+
       <ToastContainer
         autoClose={5000}
         closeOnClick
