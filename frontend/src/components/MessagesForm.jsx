@@ -8,13 +8,13 @@ import { useApi, useAuth } from '../hooks/index.jsx';
 const MessagesForm = () => {
   const { t } = useTranslation();
   const api = useApi();
-  const auth = useAuth();
+  const { user } = useAuth();
   const { currentChannelId } = useSelector((state) => state.channelsReducer);
   const [isDisabled, setDisabled] = useState(true);
   const [message, setMessage] = useState('');
   const sendMessage = async (e) => {
     e.preventDefault();
-    const { username } = auth.getUser();
+    const { username } = user;
     const messageToServer = { channelId: currentChannelId, body: filter.clean(message), username };
     await api.addMessage(messageToServer);
     setMessage('');
