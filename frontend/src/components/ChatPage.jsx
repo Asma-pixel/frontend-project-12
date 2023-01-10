@@ -18,7 +18,7 @@ const Chat = () => {
   );
 };
 
-const ChatRoutes = () => {
+const ChatPage = () => {
   const dispatch = useDispatch();
   const [isLoading, setLoading] = useState(true);
   const getData = async () => {
@@ -43,4 +43,4 @@ const ChatRoutes = () => {
   );
 };
 
-export default ChatRoutes;
+export default ChatPage;

@@ -3,12 +3,13 @@ import {
   Routes,
   Navigate,
   BrowserRouter,
+  Outlet,
 } from 'react-router-dom';
 import { useState } from 'react';
 import { ToastContainer } from 'react-toastify';
 import { AuthContext } from './contexts/index.jsx';
 
-import ChatRoutes from './components/Chat.jsx';
+import ChatPage from './components/ChatPage.jsx';
 import NavBar from './components/Navbar.jsx';
 import NoFoundPage from './components/NoFoundPage.jsx';
 import LoginPage from './components/LoginPage';
@@ -38,9 +39,9 @@ const AuthProvider = ({ children }) => {
     </AuthContext.Provider>
   );
 };
-const AuthChecker = () => {
-  const auth = useAuth();
-  return auth.user !== null ? <ChatRoutes /> : <Navigate to={routes.loginPagePath()} />;
+const PrivateOutlet = () => {
+  const { user } = useAuth();
+  return user ? <Outlet /> : <Navigate to={routes.loginPagePath()} />;
 };
 const App = () => (
   <div className="d-flex flex-column h-100">
@@ -50,8 +51,13 @@ const App = () => (
         <Routes>
           <Route
             path={routes.chatPagePath()}
-            element={<AuthChecker />}
-          />
+            element={<PrivateOutlet />}
+          >
+            <Route
+              path=""
+              element={<ChatPage />}
+            />
+          </Route>
           <Route
             path={routes.loginPagePath()}
             element={<LoginPage />}
@@ -79,7 +85,7 @@ const App = () => (
         position="top-right"
         role="alert"
         rtl={false}
-        theme="light  "
+        theme="light"
       />
     </AuthProvider>
   </div>
