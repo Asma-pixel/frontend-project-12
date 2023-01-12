@@ -9,6 +9,7 @@ export default {
     },
     generalErrors: {
       network: 'Ошибка соеденения',
+      unknown: 'Неизвестная ошибка',
     },
     loginPage: {
       title: 'Войти',

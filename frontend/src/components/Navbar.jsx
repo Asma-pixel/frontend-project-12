@@ -14,7 +14,7 @@ const NavBar = () => {
         <a className="navbar-brand" href="/">
           { t('navBar.title') }
         </a>
-        { auth.loggedIn && <Button onClick={logOut}>{ t('navBar.logoutBtn') }</Button>}
+        { auth.user && <Button onClick={logOut}>{ t('navBar.logoutBtn') }</Button>}
       </div>
     </nav>
   );

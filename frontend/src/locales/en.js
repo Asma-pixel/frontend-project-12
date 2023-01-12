@@ -9,6 +9,7 @@ export default {
     },
     generalErrors: {
       network: 'Network error',
+      unknown: 'Unknown error',
     },
     loginPage: {
       title: 'Log in',
@@ -41,19 +42,21 @@ export default {
       removeChannel: 'Remove',
       renameChannel: 'Rename',
       sendMessagePlaceholder: 'Enter your message...',
+      sendMessageAriaLabel: 'New message',
       sendMessageBtn: 'Send',
       countMessages_one: '{{count}} message',
       countMessages_other: '{{count}} messages',
-      sendMessageAriaLabel: 'New message',
     },
     modals: {
       addChannel: {
         title: 'Add channel',
+        label: 'Channel name',
         canselBtn: 'Cansel',
         addBtn: 'Submit',
       },
       renameChannel: {
         title: 'Rename channel',
+        label: 'Channel name',
         canselBtn: 'Cansel',
         renameBtn: 'Submit',
       },

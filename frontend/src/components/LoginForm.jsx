@@ -24,14 +24,12 @@ const LoginForm = () => {
       setSubmitting(true);
       setAuthFailed(false);
       try {
-        const res = await axios.post(loginPath(), values);
-        const data = JSON.stringify(res.data);
+        const { data } = await axios.post(loginPath(), values);
         auth.logIn(data);
-        navigate('/');
+        navigate(routes.chatPagePath());
       } catch (e) {
-        if (e.isAxiosError || e.response.status === 401) {
-          return setAuthFailed(true);
-        }
+        if (!e.isAxiosError) return toast.error(t('generalErrors.unknown'));
+        if (e.response?.status === 401) return setAuthFailed(true);
         toast.error(t('generalErrors.network'));
       }
       return setSubmitting(false);

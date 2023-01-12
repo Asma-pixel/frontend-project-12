@@ -1,4 +1,6 @@
 import { useTranslation } from 'react-i18next';
+import { Link } from 'react-router-dom';
+import routes from '../routes.js';
 import LoginForm from './LoginForm.jsx';
 
 const LoginPage = () => {
@@ -14,7 +16,7 @@ const LoginPage = () => {
             <div className="card-footer p-4">
               <div className="text-center">
                 <span>{t('loginPage.signupTitle')}</span>
-                <a href="/signup">{t('loginPage.signupLink')}</a>
+                <Link to={routes.signUpPagePath()}>{t('loginPage.signupLink')}</Link>
               </div>
             </div>
           </div>

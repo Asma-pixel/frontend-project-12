@@ -21,10 +21,11 @@ const AuthProvider = ({ children }) => {
   const userFromLocalStorage = JSON.parse(localStorage.getItem('user'));
   const [user, setUser] = useState(userFromLocalStorage || null);
   const logIn = (data = null) => {
-    localStorage.setItem('user', data);
+    localStorage.setItem('user', JSON.stringify(data));
     setUser(data);
   };
   const logOut = () => {
+    setUser(null);
     localStorage.removeItem('user');
   };
   // const loginInfo = useMemo(() => ({ loggedIn, logIn, logOut }), []);

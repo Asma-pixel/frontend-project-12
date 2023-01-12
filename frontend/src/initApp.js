@@ -65,19 +65,19 @@ const initApp = async () => {
     <React.StrictMode>
       <RollBarProvider config={rollbarConfig}>
         <ErrorBoundary>
-          <Provider store={store}>
-            <I18nextProvider i18n={i18nextInstance}>
-              <ApiContext.Provider value={{
-                addMessage,
-                addChannel,
-                renameChannel,
-                removeChannel,
-              }}
-              >
+          <ApiContext.Provider value={{
+            addMessage,
+            addChannel,
+            renameChannel,
+            removeChannel,
+          }}
+          >
+            <Provider store={store}>
+              <I18nextProvider i18n={i18nextInstance}>
                 <App />
-              </ApiContext.Provider>
-            </I18nextProvider>
-          </Provider>
+              </I18nextProvider>
+            </Provider>
+          </ApiContext.Provider>
         </ErrorBoundary>
       </RollBarProvider>
     </React.StrictMode>,

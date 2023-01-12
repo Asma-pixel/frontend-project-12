@@ -4,10 +4,10 @@ import { Spinner } from 'react-bootstrap';
 import fetchData from '../store/fetchData.js';
 import Channels from './Channels.jsx';
 import MesagesBox from './MessagesBox.jsx';
+import { useAuth } from '../hooks/index.jsx';
 
 const Chat = () => {
   const { currentChannelId } = useSelector((state) => state.channelsReducer);
-  console.log(currentChannelId);
   return (
     <div className="container h-100 my-4 overflow-hidden rounded shadow">
       <div className="row h-100 bg-white flex-md-row">
@@ -20,13 +20,11 @@ const Chat = () => {
 
 const ChatPage = () => {
   const dispatch = useDispatch();
+  const { user } = useAuth();
   const [isLoading, setLoading] = useState(true);
   const getData = async () => {
-    try {
-      await dispatch(fetchData());
-    } finally {
-      setLoading(false);
-    }
+    await dispatch(fetchData(user));
+    setLoading(false);
   };
   useEffect(() => {
     getData();
@@ -38,6 +36,7 @@ const ChatPage = () => {
       </div>
     );
   }
+
   return (
     <Chat />
   );

@@ -12,7 +12,7 @@ const SignUpForm = () => {
   const { t } = useTranslation();
   const auth = useAuth();
   const navigate = useNavigate();
-  const validatePassword = yup.object({
+  const validationSchema = yup.object({
     username: yup.string().min(3, 'incorrectLengthUsername').max(20, 'incorrectLengthUsername').required('emptyField'),
     password: yup.string().min(6, 'toShortPassword').required('emptyField'),
     confirmPassword: yup.string().test('isPassword', 'passwordsNotEqual', (value, { parent }) => {
@@ -26,24 +26,23 @@ const SignUpForm = () => {
       password: '',
       confirmPassword: '',
     },
-    validationSchema: validatePassword,
+    validationSchema,
     onSubmit: async (values, { setSubmitting }) => {
       setSubmitting(true);
       const { signUpPath } = routes;
       const formData = { username: values.username, password: values.password };
       try {
-        const res = await axios.post(signUpPath(), formData);
-        const data = JSON.stringify(res.data);
+        const { data } = await axios.post(signUpPath(), formData);
         auth.logIn(data);
-        navigate('/');
+        navigate(routes.chatPagePath());
       } catch (e) {
-        if (e.response.status === 409) return toast.error(t('signupPage.errors.userExists'));
+        if (!e.isAxiosError) return toast.error(t('generalErrors.unknown'));
+        if (e.response?.status === 409) toast.error(t('signupPage.errors.userExists'));
         toast.error(t('generalErrors.network'));
       }
       return setSubmitting(false);
     },
   });
-  console.log(formik.errors);
   return (
     <Form onSubmit={formik.handleSubmit}>
       <h1 className="text-center mb-4">{t('signupPage.title')}</h1>
