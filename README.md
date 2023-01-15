@@ -1,6 +1,5 @@
 ## Hello, it is a simple react app. 
 
--- 
 This application is a chat like slack. You can chat in default channels or create new channels. You can manage your channels. For example delete or rename your channel.
 --  
 ### Installation steps
