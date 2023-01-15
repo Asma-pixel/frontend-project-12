@@ -19,6 +19,7 @@ const Chat = () => {
 };
 
 const ChatPage = () => {
+  c = d;
   const dispatch = useDispatch();
   const { user } = useAuth();
   const [isLoading, setLoading] = useState(true);
