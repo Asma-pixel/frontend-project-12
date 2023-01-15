@@ -28,9 +28,9 @@ const LoginForm = () => {
         auth.logIn(data);
         navigate(routes.chatPagePath());
       } catch (e) {
-        if (!e.isAxiosError) return toast.error(t('generalErrors.unknown'));
-        if (e.response?.status === 401) return setAuthFailed(true);
-        toast.error(t('generalErrors.network'));
+        if (!e.isAxiosError) toast.error(t('generalErrors.unknown'));
+        else if (e.response?.status === 401) setAuthFailed(true);
+        else toast.error(t('generalErrors.network'));
       }
       return setSubmitting(false);
     },
