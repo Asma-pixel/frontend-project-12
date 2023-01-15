@@ -6,8 +6,8 @@
 1. Clone this repository to your PC.
 2. Execute comand `make install` in terminal
 
-You can run this app by command `make start`.
---
+## You can run this app by command `make start`.
+
 
 ### Hexlet tests and linter status:
 [![Actions Status](https://github.com/Asma-pixel/frontend-project-12/workflows/hexlet-check/badge.svg)](https://github.com/Asma-pixel/frontend-project-12/actions)
