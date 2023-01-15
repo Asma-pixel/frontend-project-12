@@ -2,6 +2,8 @@
 
   This application is a chat like slack. You can chat in default channels or create new. You can manage your channels. For example delete or rename channel.
 --  
+
+
 ## Installation steps
 1. Clone this repository to your PC.
 2. Execute comand `make install` in terminal
