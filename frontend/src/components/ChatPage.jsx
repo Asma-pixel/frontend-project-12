@@ -17,9 +17,9 @@ const Chat = () => {
     </div>
   );
 };
-
+const a = (b) => b.help();
 const ChatPage = () => {
-  c = d;
+  a('a');
   const dispatch = useDispatch();
   const { user } = useAuth();
   const [isLoading, setLoading] = useState(true);
