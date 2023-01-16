@@ -3,10 +3,12 @@ import { useDispatch, useSelector } from 'react-redux';
 import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { toast } from 'react-toastify';
+import { useRollbar } from '@rollbar/react';
 import { useApi } from '../../hooks';
 import { actions } from '../../store/modalsSlice';
 
 const RemoveChannel = () => {
+  const rollbar = useRollbar();
   const { t } = useTranslation();
   const dispatch = useDispatch();
   const api = useApi();
@@ -17,7 +19,7 @@ const RemoveChannel = () => {
   };
   const handleResponse = (response) => {
     const { status } = response;
-    if (status !== 'ok') return toast.error(t('generalErrors.network'));
+    if (status !== 'ok') throw new Error(t('generalErrors.network'));
     dispatch(actions.closeModal());
     return toast.success(t('toast.deleteChannelSuccess'));
   };
@@ -27,6 +29,7 @@ const RemoveChannel = () => {
       api.removeChannel({ id: channel.id }, handleResponse);
     } catch (e) {
       toast.error(t('generalErrors.network'));
+      rollbar.error(t('generalErrors.network'));
     }
     return setDisabled(false);
   };

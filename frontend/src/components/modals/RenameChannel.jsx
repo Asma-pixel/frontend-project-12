@@ -6,11 +6,13 @@ import * as yup from 'yup';
 import { useTranslation } from 'react-i18next';
 import { toast } from 'react-toastify';
 import filter from 'leo-profanity';
+import { useRollbar } from '@rollbar/react';
 import { actions } from '../../store/modalsSlice';
 import { selectors } from '../../store/channelsSlice';
 import { useApi } from '../../hooks';
 
 const RenameChannel = () => {
+  const rollbar = useRollbar();
   const { t } = useTranslation();
   const dispatch = useDispatch();
   const api = useApi();
@@ -26,7 +28,7 @@ const RenameChannel = () => {
 
   const handleResponse = (response) => {
     const { status } = response;
-    if (status !== 'ok') return toast.error(t('generalErrors.network'));
+    if (status !== 'ok') throw new Error(t('generalErrors.network'));
     dispatch(actions.closeModal());
     return toast.success(t('toast.renameChannelSuccess'));
   };
@@ -40,6 +42,7 @@ const RenameChannel = () => {
         api.renameChannel({ id: channel.id, name: filteredName }, handleResponse);
       } catch (e) {
         toast.error(t('generalErrors.network'));
+        rollbar.error(t('generalErrors.network'));
       }
       return setSubmitting(false);
     },

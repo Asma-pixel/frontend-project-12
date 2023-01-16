@@ -10,6 +10,7 @@ export default {
     generalErrors: {
       network: 'Ошибка соеденения',
       unknown: 'Неизвестная ошибка',
+      unauthorized: 'Неавторизованный пользователь',
     },
     loginPage: {
       title: 'Войти',

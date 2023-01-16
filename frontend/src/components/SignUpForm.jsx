@@ -5,10 +5,12 @@ import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import { toast } from 'react-toastify';
+import { useRollbar } from '@rollbar/react';
 import routes from '../routes';
 import { useAuth } from '../hooks';
 
 const SignUpForm = () => {
+  const rollbar = useRollbar();
   const { t } = useTranslation();
   const auth = useAuth();
   const navigate = useNavigate();
@@ -36,9 +38,16 @@ const SignUpForm = () => {
         auth.logIn(data);
         navigate(routes.chatPagePath());
       } catch (e) {
-        if (!e.isAxiosError) toast.error(t('generalErrors.unknown'));
-        else if (e.response?.status === 409) toast.error(t('signupPage.errors.userExists'));
-        else toast.error(t('generalErrors.network'));
+        if (!e.isAxiosError) {
+          toast.error(t('generalErrors.unknown'));
+          rollbar.error(t('generalErrors.unknown'));
+        } else if (e.response?.status === 409) {
+          rollbar.error(t('signupPage.errors.userExists'));
+          toast.error(t('signupPage.errors.userExists'));
+        } else {
+          toast.error(t('generalErrors.network'));
+          rollbar.error(t('generalErrors.network'));
+        }
       }
       return setSubmitting(false);
     },

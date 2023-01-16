@@ -5,10 +5,12 @@ import { useNavigate } from 'react-router-dom';
 import { Form, Button } from 'react-bootstrap';
 import { useTranslation } from 'react-i18next';
 import { toast } from 'react-toastify';
+import { useRollbar } from '@rollbar/react';
 import { useAuth } from '../hooks/index.jsx';
 import routes from '../routes.js';
 
 const LoginForm = () => {
+  const rollbar = useRollbar();
   const { t } = useTranslation();
   const auth = useAuth();
   const [authFailed, setAuthFailed] = useState(false);
@@ -28,9 +30,16 @@ const LoginForm = () => {
         auth.logIn(data);
         navigate(routes.chatPagePath());
       } catch (e) {
-        if (!e.isAxiosError) toast.error(t('generalErrors.unknown'));
-        else if (e.response?.status === 401) setAuthFailed(true);
-        else toast.error(t('generalErrors.network'));
+        if (!e.isAxiosError) {
+          toast.error(t('generalErrors.unknown'));
+          rollbar.error(t('generalErrors.unknown'));
+        } else if (e.response?.status === 401) {
+          rollbar.error(t('loginPage.errors.userNotFound'));
+          setAuthFailed(true);
+        } else {
+          toast.error(t('generalErrors.network'));
+          rollbar.error(t('loginPage.errors.userNotFound'));
+        }
       }
       return setSubmitting(false);
     },

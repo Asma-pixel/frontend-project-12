@@ -3,9 +3,12 @@ import { Form, Button, InputGroup } from 'react-bootstrap';
 import { useTranslation } from 'react-i18next';
 import { useSelector } from 'react-redux';
 import filter from 'leo-profanity';
+import { toast } from 'react-toastify';
+import { useRollbar } from '@rollbar/react';
 import { useApi, useAuth } from '../hooks/index.jsx';
 
 const MessagesForm = () => {
+  const rollbar = useRollbar();
   const { t } = useTranslation();
   const api = useApi();
   const { user } = useAuth();
@@ -16,7 +19,12 @@ const MessagesForm = () => {
     e.preventDefault();
     const { username } = user;
     const messageToServer = { channelId: currentChannelId, body: filter.clean(message), username };
-    await api.addMessage(messageToServer);
+    try {
+      await api.addMessage(messageToServer);
+    } catch {
+      toast.error(t('generalErrors.network'));
+      rollbar.error(t('generalErrors.network'));
+    }
     setMessage('');
     setDisabled(true);
   };

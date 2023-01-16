@@ -6,11 +6,13 @@ import * as yup from 'yup';
 import { useTranslation } from 'react-i18next';
 import { toast } from 'react-toastify';
 import filter from 'leo-profanity';
+import { useRollbar } from '@rollbar/react';
 import { actions } from '../../store/modalsSlice';
 import { actions as channelsActions, selectors } from '../../store/channelsSlice';
 import { useApi } from '../../hooks';
 
 const AddChannel = () => {
+  const rollbar = useRollbar();
   const { t } = useTranslation();
   const dispatch = useDispatch();
   const api = useApi();
@@ -25,7 +27,7 @@ const AddChannel = () => {
 
   const handleResponse = (response) => {
     const { status, data } = response;
-    if (status !== 'ok') return toast.error(t('generalErrors.network'));
+    if (status !== 'ok') throw new Error(t('generalErrors.network'));
     const { id } = data;
     dispatch(channelsActions.setCurrentChannel(id));
     dispatch(actions.closeModal());
@@ -41,6 +43,7 @@ const AddChannel = () => {
         api.addChannel({ name: filteredName }, handleResponse);
       } catch (e) {
         toast.error(t('generalErrors.network'));
+        rollbar.error(t('generalErrors.network'));
       }
 
       setSubmitting(false);

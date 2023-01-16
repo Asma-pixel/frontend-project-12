@@ -1,6 +1,8 @@
 import { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { Spinner } from 'react-bootstrap';
+import { useTranslation } from 'react-i18next';
+import { useRollbar } from '@rollbar/react';
 import fetchData from '../store/fetchData.js';
 import Channels from './Channels.jsx';
 import MesagesBox from './MessagesBox.jsx';
@@ -18,11 +20,20 @@ const Chat = () => {
   );
 };
 const ChatPage = () => {
+  const { t } = useTranslation();
+  const rollbar = useRollbar();
   const dispatch = useDispatch();
-  const { user } = useAuth();
+  const { user, logOut } = useAuth();
   const [isLoading, setLoading] = useState(true);
   const getData = async () => {
-    await dispatch(fetchData(user));
+    try {
+      await dispatch(fetchData(user)).unwrap();
+    } catch (e) {
+      if (e.name === 'AxiosError') {
+        logOut();
+        rollbar.error(t('generalErrors.unauthorized'));
+      }
+    }
     setLoading(false);
   };
   useEffect(() => {
