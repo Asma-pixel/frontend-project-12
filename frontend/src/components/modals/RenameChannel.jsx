@@ -42,7 +42,7 @@ const RenameChannel = () => {
         api.renameChannel({ id: channel.id, name: filteredName }, handleResponse);
       } catch (e) {
         toast.error(t('generalErrors.network'));
-        rollbar.error(t('generalErrors.network'));
+        rollbar.error(e);
       }
       return setSubmitting(false);
     },

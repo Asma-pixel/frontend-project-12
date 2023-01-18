@@ -29,7 +29,7 @@ const RemoveChannel = () => {
       api.removeChannel({ id: channel.id }, handleResponse);
     } catch (e) {
       toast.error(t('generalErrors.network'));
-      rollbar.error(t('generalErrors.network'));
+      rollbar.error(e);
     }
     return setDisabled(false);
   };

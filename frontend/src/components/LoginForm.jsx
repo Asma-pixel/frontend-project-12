@@ -30,16 +30,10 @@ const LoginForm = () => {
         auth.logIn(data);
         navigate(routes.chatPagePath());
       } catch (e) {
-        if (!e.isAxiosError) {
-          toast.error(t('generalErrors.unknown'));
-          rollbar.error(t('generalErrors.unknown'));
-        } else if (e.response?.status === 401) {
-          rollbar.error(t('loginPage.errors.userNotFound'));
-          setAuthFailed(true);
-        } else {
-          toast.error(t('generalErrors.network'));
-          rollbar.error(t('loginPage.errors.userNotFound'));
-        }
+        rollbar.error(e);
+        if (!e.isAxiosError) toast.error(t('generalErrors.unknown'));
+        else if (e.response?.status === 401) setAuthFailed(true);
+        else toast.error(t('generalErrors.network'));
       }
       return setSubmitting(false);
     },

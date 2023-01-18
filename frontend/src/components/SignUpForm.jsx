@@ -38,16 +38,10 @@ const SignUpForm = () => {
         auth.logIn(data);
         navigate(routes.chatPagePath());
       } catch (e) {
-        if (!e.isAxiosError) {
-          toast.error(t('generalErrors.unknown'));
-          rollbar.error(t('generalErrors.unknown'));
-        } else if (e.response?.status === 409) {
-          rollbar.error(t('signupPage.errors.userExists'));
-          toast.error(t('signupPage.errors.userExists'));
-        } else {
-          toast.error(t('generalErrors.network'));
-          rollbar.error(t('generalErrors.network'));
-        }
+        rollbar.error(e);
+        if (!e.isAxiosError) toast.error(t('generalErrors.unknown'));
+        else if (e.response?.status === 409) toast.error(t('signupPage.errors.userExists'));
+        else toast.error(t('generalErrors.network'));
       }
       return setSubmitting(false);
     },

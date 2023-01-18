@@ -43,7 +43,7 @@ const AddChannel = () => {
         api.addChannel({ name: filteredName }, handleResponse);
       } catch (e) {
         toast.error(t('generalErrors.network'));
-        rollbar.error(t('generalErrors.network'));
+        rollbar.error(e);
       }
 
       setSubmitting(false);

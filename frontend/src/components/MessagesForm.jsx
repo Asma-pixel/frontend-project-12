@@ -21,9 +21,9 @@ const MessagesForm = () => {
     const messageToServer = { channelId: currentChannelId, body: filter.clean(message), username };
     try {
       await api.addMessage(messageToServer);
-    } catch {
+    } catch (error) {
       toast.error(t('generalErrors.network'));
-      rollbar.error(t('generalErrors.network'));
+      rollbar.error(error);
     }
     setMessage('');
     setDisabled(true);
