@@ -15,8 +15,7 @@ const MessagesForm = () => {
   const { currentChannelId } = useSelector((state) => state.channelsReducer);
   const formik = useFormik({
     initialValues: { message: '' },
-    onSubmit: async (values, { setSubmitting }) => {
-      setSubmitting(true);
+    onSubmit: async (values, { resetForm }) => {
       const tempValues = values;
       const { username } = user;
       const messageToServer = {
@@ -30,8 +29,7 @@ const MessagesForm = () => {
         toast.error(t('generalErrors.network'));
         rollbar.error(error);
       }
-      tempValues.message = '';
-      setSubmitting(false);
+      resetForm();
     },
   });
   return (

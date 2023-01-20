@@ -33,18 +33,18 @@ const initApp = async () => {
     dispatch(channelsActions.removeChannel(id));
   });
   const addMessage = (message) => {
-    socket.emit('newMessage', message, (response) => {
+    socket.timeout(5000).emit('newMessage', message, (response) => {
       console.log(response);
     });
   };
   const addChannel = (channel, cb) => {
-    socket.emit('newChannel', channel, cb);
+    socket.timeout(5000).emit('newChannel', channel, cb);
   };
   const renameChannel = (channel, cb) => {
-    socket.emit('renameChannel', channel, cb);
+    socket.timeout(5000).emit('renameChannel', channel, cb);
   };
   const removeChannel = (id, cb) => {
-    socket.emit('removeChannel', id, cb);
+    socket.timeout(5000).emit('removeChannel', id, cb);
   };
 
   const i18nextInstance = i18next.createInstance();

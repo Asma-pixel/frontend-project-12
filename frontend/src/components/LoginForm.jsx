@@ -22,8 +22,7 @@ const LoginForm = () => {
       username: '',
       password: '',
     },
-    onSubmit: async (values, { setSubmitting }) => {
-      setSubmitting(true);
+    onSubmit: async (values) => {
       setAuthFailed(false);
       try {
         const { data } = await axios.post(loginPath(), values);
@@ -35,7 +34,6 @@ const LoginForm = () => {
         else if (e.response?.status === 401) setAuthFailed(true);
         else toast.error(t('generalErrors.network'));
       }
-      return setSubmitting(false);
     },
   });
   return (

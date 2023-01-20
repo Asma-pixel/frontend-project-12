@@ -20,7 +20,7 @@ import { useAuth } from './hooks/index.jsx';
 const AuthProvider = ({ children }) => {
   const userFromLocalStorage = JSON.parse(localStorage.getItem('user'));
   const [user, setUser] = useState(userFromLocalStorage || null);
-  const logIn = (data = null) => {
+  const logIn = (data) => {
     localStorage.setItem('user', JSON.stringify(data));
     setUser(data);
   };

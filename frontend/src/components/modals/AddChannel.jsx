@@ -37,8 +37,7 @@ const AddChannel = () => {
   const formik = useFormik({
     initialValues: { body: '' },
     validationSchema: yup.object({ body: channelSchema }),
-    onSubmit: async (values, { setSubmitting }) => {
-      setSubmitting(true);
+    onSubmit: async (values) => {
       try {
         const filteredName = filter.clean(values.body);
         await api.addChannel({ name: filteredName }, handleResponse);
@@ -46,8 +45,6 @@ const AddChannel = () => {
         toast.error(t('generalErrors.network'));
         rollbar.error(e);
       }
-
-      setSubmitting(false);
     },
     validateOnBlur: false,
     validateOnChange: false,

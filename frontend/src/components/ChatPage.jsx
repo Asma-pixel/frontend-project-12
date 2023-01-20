@@ -27,6 +27,7 @@ const ChatPage = () => {
   const { user, logOut } = useAuth();
   const [isLoading, setLoading] = useState(true);
   const getData = async () => {
+    setLoading(true);
     try {
       await dispatch(fetchData(user)).unwrap();
     } catch (e) {
