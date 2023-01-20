@@ -27,7 +27,6 @@ const ChatPage = () => {
   const { user, logOut } = useAuth();
   const [isLoading, setLoading] = useState(true);
   const getData = async () => {
-    setLoading(true);
     try {
       await dispatch(fetchData(user)).unwrap();
     } catch (e) {
@@ -39,7 +38,7 @@ const ChatPage = () => {
   };
   useEffect(() => {
     getData();
-  }, []);
+  });
   if (isLoading) {
     return (
       <div className="d-flex justify-content-center align-items-center h-100">
