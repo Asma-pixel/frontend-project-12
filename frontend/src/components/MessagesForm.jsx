@@ -37,6 +37,7 @@ const MessagesForm = () => {
       <Form className="py-1 border rounded-2" onSubmit={formik.handleSubmit}>
         <InputGroup className="has-validation border-0">
           <Form.Control
+            disabled={formik.isSubmitting}
             type="text"
             onChange={formik.handleChange}
             value={formik.values.message}

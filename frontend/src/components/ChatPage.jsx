@@ -27,18 +27,19 @@ const ChatPage = () => {
   const { user, logOut } = useAuth();
   const [isLoading, setLoading] = useState(true);
   const getData = async () => {
+    setLoading(true);
     try {
       await dispatch(fetchData(user)).unwrap();
     } catch (e) {
       rollbar.error(e);
-      if (e.statusCode === 401) return logOut();
-      return toast.error(t('generalErrors.unknown'));
+      if (e.statusCode === 401) logOut();
+      else toast.error(t('generalErrors.unknown'));
     }
-    return setLoading(false);
+    setLoading(false);
   };
   useEffect(() => {
     getData();
-  });
+  }, []);
   if (isLoading) {
     return (
       <div className="d-flex justify-content-center align-items-center h-100">

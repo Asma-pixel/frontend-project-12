@@ -32,11 +32,16 @@ const initApp = async () => {
   socket.on('removeChannel', ({ id }) => {
     dispatch(channelsActions.removeChannel(id));
   });
-  const addMessage = (message) => {
+
+  const addMessage = (message) => new Promise((resolve, reject) => {
     socket.timeout(5000).emit('newMessage', message, (err, response) => {
-      console.log(response);
+      if (err) {
+        reject();
+        return;
+      }
+      resolve(response);
     });
-  };
+  });
   const addChannel = (channel, cb) => {
     socket.timeout(5000).emit('newChannel', channel, cb);
   };
