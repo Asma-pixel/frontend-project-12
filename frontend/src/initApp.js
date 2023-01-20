@@ -33,7 +33,7 @@ const initApp = async () => {
     dispatch(channelsActions.removeChannel(id));
   });
   const addMessage = (message) => {
-    socket.timeout(5000).emit('newMessage', message, (response) => {
+    socket.timeout(5000).emit('newMessage', message, (err, response) => {
       console.log(response);
     });
   };

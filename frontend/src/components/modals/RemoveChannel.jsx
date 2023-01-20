@@ -17,9 +17,10 @@ const RemoveChannel = () => {
   const closeModal = () => {
     dispatch(actions.closeModal());
   };
-  const handleResponse = (response) => {
+  const handleResponse = (err, response) => {
+    if (err) throw new Error(t('generalErrors.network'));
     const { status } = response;
-    if (status !== 'ok') throw new Error(t('generalErrors.network'));
+    if (status !== 'ok') throw new Error(t('generalErrors.unknown'));
     dispatch(actions.closeModal());
     return toast.success(t('toast.deleteChannelSuccess'));
   };

@@ -25,10 +25,11 @@ const AddChannel = () => {
     .max(20, 'incorrectFieldLenth')
     .required('emptyField');
 
-  const handleResponse = (response) => {
+  const handleResponse = (err, response) => {
+    if (err) throw new Error(t('generalErrors.network'));
     const { status, data } = response;
     console.log(status);
-    if (status !== 'ok') throw new Error(t('generalErrors.network'));
+    if (status !== 'ok') throw new Error(t('generalErrors.unknown'));
     const { id } = data;
     dispatch(channelsActions.setCurrentChannel(id));
     dispatch(actions.closeModal());
