@@ -11,26 +11,22 @@ const RemoveChannel = () => {
   const rollbar = useRollbar();
   const { t } = useTranslation();
   const dispatch = useDispatch();
-  const api = useApi();
+  const { socketDecorator } = useApi();
   const [isDisabled, setDisabled] = useState(false);
   const { channel } = useSelector((state) => state.modalsReducer);
   const closeModal = () => {
     dispatch(actions.closeModal());
   };
-  const handleResponse = (err, response) => {
-    if (err) throw new Error(t('generalErrors.network'));
-    const { status } = response;
-    if (status !== 'ok') throw new Error(t('generalErrors.unknown'));
-    dispatch(actions.closeModal());
-    return toast.success(t('toast.deleteChannelSuccess'));
-  };
-  const deleteChannel = () => {
+  const deleteChannel = async () => {
     setDisabled(true);
     try {
-      api.removeChannel({ id: channel.id }, handleResponse);
+      await socketDecorator('removeChannel', { id: channel.id });
+      toast.success(t('toast.deleteChannelSuccess'));
     } catch (e) {
-      toast.error(t('generalErrors.network'));
+      toast.error(t(e.message));
       rollbar.error(e);
+    } finally {
+      dispatch(actions.closeModal());
     }
     return setDisabled(false);
   };
@@ -43,20 +39,19 @@ const RemoveChannel = () => {
       <Modal.Body>
         <p className="lead">{t('modals.removeChannel.body')}</p>
         <div className="d-flex justify-content-end">
-          <fieldset disabled={isDisabled}>
-            <Button
-              className="me-2 btn btn-secondary"
-              onClick={closeModal}
-            >
-              {t('modals.removeChannel.canselBtn')}
-            </Button>
-            <Button
-              className="btn btn-danger"
-              onClick={deleteChannel}
-            >
-              {t('modals.removeChannel.deleteBtn')}
-            </Button>
-          </fieldset>
+          <Button
+            className="me-2 btn btn-secondary"
+            onClick={closeModal}
+          >
+            {t('modals.removeChannel.canselBtn')}
+          </Button>
+          <Button
+            disabled={isDisabled}
+            className="btn btn-danger"
+            onClick={deleteChannel}
+          >
+            {t('modals.removeChannel.deleteBtn')}
+          </Button>
         </div>
       </Modal.Body>
     </Modal>

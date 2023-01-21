@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { Spinner } from 'react-bootstrap';
 import { useRollbar } from '@rollbar/react';
@@ -26,7 +26,8 @@ const ChatPage = () => {
   const dispatch = useDispatch();
   const { user, logOut } = useAuth();
   const [isLoading, setLoading] = useState(true);
-  const getData = async () => {
+  const getData = useCallback(async () => {
+    setLoading(true);
     try {
       await dispatch(fetchData(user)).unwrap();
     } catch (e) {
@@ -35,10 +36,11 @@ const ChatPage = () => {
       else toast.error(t('generalErrors.unknown'));
     }
     setLoading(false);
-  };
+  }, [dispatch, user, rollbar, logOut, t]);
+
   useEffect(() => {
     getData();
-  });
+  }, [getData]);
   if (isLoading) {
     return (
       <div className="d-flex justify-content-center align-items-center h-100">

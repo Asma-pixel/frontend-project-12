@@ -15,7 +15,7 @@ const RenameChannel = () => {
   const rollbar = useRollbar();
   const { t } = useTranslation();
   const dispatch = useDispatch();
-  const api = useApi();
+  const { socketDecorator } = useApi();
   const channels = useSelector(selectors.selectAll);
   const { channel } = useSelector((state) => state.modalsReducer);
   const channelsNames = channels.map((item) => item.name);
@@ -26,23 +26,19 @@ const RenameChannel = () => {
     .max(20, 'incorrectFieldLenth')
     .required('emptyField');
 
-  const handleResponse = (err, response) => {
-    if (err) throw new Error(t('generalErrors.network'));
-    const { status } = response;
-    if (status !== 'ok') throw new Error(t('generalErrors.unknown'));
-    dispatch(actions.closeModal());
-    return toast.success(t('toast.renameChannelSuccess'));
-  };
   const formik = useFormik({
     initialValues: { body: channel.name },
     validationSchema: yup.object({ body: channelSchema }),
     onSubmit: async (values) => {
       try {
         const filteredName = filter.clean(values.body);
-        await api.renameChannel({ id: channel.id, name: filteredName }, handleResponse);
+        await socketDecorator('renameChannel', { id: channel.id, name: filteredName });
+        toast.success(t('toast.renameChannelSuccess'));
       } catch (e) {
-        toast.error(t('generalErrors.network'));
         rollbar.error(e);
+        toast.error(t(e.message));
+      } finally {
+        dispatch(actions.closeModal());
       }
     },
     validateOnBlur: false,
@@ -65,40 +61,39 @@ const RenameChannel = () => {
 
       <Modal.Body>
         <Form onSubmit={formik.handleSubmit}>
-          <fieldset disabled={formik.isSubmitting}>
-            <Form.Group>
-              <Form.Control
-                isInvalid={!formik.isValid}
-                ref={inputRef}
-                onChange={formik.handleChange}
-                onBlur={formik.handleBlur}
-                value={formik.values.body}
-                data-testid="input-body"
-                name="body"
-                id="body"
-              />
-              <Form.Label className="visually-hidden" htmlFor="body">{t('modals.renameChannel.label')}</Form.Label>
-              <Form.Control.Feedback type="invalid">
-                {!formik.isValid && t(`modals.errors.${formik.errors.body}`)}
-              </Form.Control.Feedback>
-            </Form.Group>
-            <div className="d-flex justify-content-end">
-              <Button
-                type="submit"
-                className="btn btn-primary"
-              >
-                {t('modals.renameChannel.renameBtn')}
-              </Button>
-              <Button
-                type="submit"
-                className="me-2 btn btn-secondary"
-                value="Отменить"
-                onClick={closeModal}
-              >
-                {t('modals.renameChannel.canselBtn')}
-              </Button>
-            </div>
-          </fieldset>
+          <Form.Group className="mb-2">
+            <Form.Control
+              disabled={formik.isSubmitting}
+              isInvalid={!formik.isValid}
+              ref={inputRef}
+              onChange={formik.handleChange}
+              onBlur={formik.handleBlur}
+              value={formik.values.body}
+              data-testid="input-body"
+              name="body"
+              id="body"
+            />
+            <Form.Label className="visually-hidden" htmlFor="body">{t('modals.renameChannel.label')}</Form.Label>
+            <Form.Control.Feedback type="invalid">
+              {!formik.isValid && t(`modals.errors.${formik.errors.body}`)}
+            </Form.Control.Feedback>
+          </Form.Group>
+          <div className="d-flex justify-content-end">
+            <Button
+              className="me-2 btn btn-secondary"
+              value="Отменить"
+              onClick={closeModal}
+            >
+              {t('modals.renameChannel.canselBtn')}
+            </Button>
+            <Button
+              disabled={formik.isSubmitting}
+              type="submit"
+              className="btn btn-primary"
+            >
+              {t('modals.renameChannel.renameBtn')}
+            </Button>
+          </div>
         </Form>
       </Modal.Body>
     </Modal>

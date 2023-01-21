@@ -10,7 +10,7 @@ import { useApi, useAuth } from '../hooks/index.jsx';
 const MessagesForm = () => {
   const rollbar = useRollbar();
   const { t } = useTranslation();
-  const api = useApi();
+  const { socketDecorator } = useApi();
   const { user } = useAuth();
   const { currentChannelId } = useSelector((state) => state.channelsReducer);
   const formik = useFormik({
@@ -24,12 +24,12 @@ const MessagesForm = () => {
         username,
       };
       try {
-        await api.addMessage(messageToServer);
-      } catch (error) {
-        toast.error(t('generalErrors.network'));
-        rollbar.error(error);
+        await socketDecorator('newMessage', messageToServer);
+        resetForm();
+      } catch (e) {
+        toast.error(t(e.message));
+        rollbar.error(e);
       }
-      resetForm();
     },
   });
   return (

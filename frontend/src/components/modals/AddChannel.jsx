@@ -15,7 +15,7 @@ const AddChannel = () => {
   const rollbar = useRollbar();
   const { t } = useTranslation();
   const dispatch = useDispatch();
-  const api = useApi();
+  const { socketDecorator } = useApi();
   const channels = useSelector(selectors.selectAll);
   const channelsNames = channels.map((channel) => channel.name);
   const channelSchema = yup
@@ -24,31 +24,27 @@ const AddChannel = () => {
     .min(3, 'incorrectFieldLenth')
     .max(20, 'incorrectFieldLenth')
     .required('emptyField');
-
-  const handleResponse = async (err, response) => {
-    if (err) {
-      rollbar.error(err);
-      dispatch(actions.closeModal());
-      toast.error(t('generalErrors.network'));
-      return;
-    }
-    const { status, data } = response;
-    if (status !== 'ok') {
-      toast.error(t('generalErrors.unknown'));
-      return;
-    }
-    const { id } = data;
-    dispatch(channelsActions.setCurrentChannel(id));
-    dispatch(actions.closeModal());
-    toast.success(t('toast.addChannelSuccess'));
-  };
   const formik = useFormik({
     initialValues: { body: '' },
     validationSchema: yup.object({ body: channelSchema }),
     onSubmit: async (values) => {
-      const filteredName = filter.clean(values.body);
-      await api.addChannel({ name: filteredName }, handleResponse);
+      try {
+        const filteredName = filter.clean(values.body);
+        const data = await socketDecorator('newChannel', { name: filteredName });
+        console.log(data);
+        const { id } = data;
+        dispatch(channelsActions.setCurrentChannel(id));
+        toast.success(t('toast.addChannelSuccess'));
+      } catch (e) {
+        rollbar.error(e);
+        toast.error(t(e.message));
+      } finally {
+        dispatch(actions.closeModal());
+      }
     },
+    validateOnBlur: false,
+    validateOnChange: false,
+    validateOnMount: false,
   });
 
   const inputRef = useRef();
@@ -66,7 +62,7 @@ const AddChannel = () => {
 
       <Modal.Body>
         <Form onSubmit={formik.handleSubmit}>
-          <Form.Group className="mb-1">
+          <Form.Group className="mb-2">
             <Form.Control
               disabled={formik.isSubmitting}
               isInvalid={!formik.isValid}
@@ -85,20 +81,20 @@ const AddChannel = () => {
           </Form.Group>
           <div className="d-flex justify-content-end">
             <Button
-              type="submit"
-              disabled={formik.isSubmitting}
-              className="btn btn-primary mx-1"
-            >
-              {t('modals.addChannel.addBtn')}
-            </Button>
-            <Button
-              type="submit"
-              className="me-2 btn btn-secondary"
+              className="mx-2 btn btn-secondary"
               value="Отменить"
               onClick={closeModal}
             >
               {t('modals.addChannel.canselBtn')}
             </Button>
+            <Button
+              type="submit"
+              disabled={formik.isSubmitting}
+              className="btn btn-primary"
+            >
+              {t('modals.addChannel.addBtn')}
+            </Button>
+
           </div>
         </Form>
       </Modal.Body>

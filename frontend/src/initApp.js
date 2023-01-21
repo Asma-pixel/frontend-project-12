@@ -33,24 +33,30 @@ const initApp = async () => {
     dispatch(channelsActions.removeChannel(id));
   });
 
-  const addMessage = (message) => new Promise((resolve, reject) => {
-    socket.timeout(5000).emit('newMessage', message, (err, response) => {
-      if (err) {
-        reject();
-        return;
-      }
-      resolve(response);
+  const socketDecorator = (...args) => new Promise((resolve, reject) => {
+    socket.timeout(3000).emit(...args, (err, response) => {
+      if (response?.status === 'ok') resolve(response?.data);
+      reject(new Error('generalErrors.network'));
     });
   });
-  const addChannel = (channel, cb) => {
-    socket.timeout(5000).emit('newChannel', channel, cb);
-  };
-  const renameChannel = (channel, cb) => {
-    socket.timeout(5000).emit('renameChannel', channel, cb);
-  };
-  const removeChannel = (id, cb) => {
-    socket.timeout(5000).emit('removeChannel', id, cb);
-  };
+  // const addMessage = (message) => new Promise((resolve, reject) => {
+  //   socket.timeout(5000).emit('newMessage', message, (err, response) => {
+  //     if (err) {
+  //       reject();
+  //       return;
+  //     }
+  //     resolve(response);
+  //   });
+  // });
+  // const addChannel = (channel, cb) => {
+  //   socket.timeout(5000).emit('newChannel', channel, cb);
+  // };
+  // const renameChannel = (channel, cb) => {
+  //   socket.timeout(5000).emit('renameChannel', channel, cb);
+  // };
+  // const removeChannel = (id, cb) => {
+  //   socket.timeout(5000).emit('removeChannel', id, cb);
+  // };
 
   const i18nextInstance = i18next.createInstance();
   await i18nextInstance
@@ -71,10 +77,7 @@ const initApp = async () => {
       <RollBarProvider config={rollbarConfig}>
         <ErrorBoundary>
           <ApiContext.Provider value={{
-            addMessage,
-            addChannel,
-            renameChannel,
-            removeChannel,
+            socketDecorator,
           }}
           >
             <Provider store={store}>
