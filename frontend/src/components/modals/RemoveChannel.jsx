@@ -11,7 +11,7 @@ const RemoveChannel = () => {
   const rollbar = useRollbar();
   const { t } = useTranslation();
   const dispatch = useDispatch();
-  const { socketDecorator } = useApi();
+  const { removeChannel } = useApi();
   const [isDisabled, setDisabled] = useState(false);
   const { channel } = useSelector((state) => state.modalsReducer);
   const closeModal = () => {
@@ -20,7 +20,7 @@ const RemoveChannel = () => {
   const deleteChannel = async () => {
     setDisabled(true);
     try {
-      await socketDecorator('removeChannel', { id: channel.id });
+      await removeChannel({ id: channel.id });
       toast.success(t('toast.deleteChannelSuccess'));
     } catch (e) {
       toast.error(t(e.message));

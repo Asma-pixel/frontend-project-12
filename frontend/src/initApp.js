@@ -32,31 +32,30 @@ const initApp = async () => {
   socket.on('removeChannel', ({ id }) => {
     dispatch(channelsActions.removeChannel(id));
   });
-
-  const socketDecorator = (...args) => new Promise((resolve, reject) => {
-    socket.timeout(3000).emit(...args, (err, response) => {
+  const addMessage = (message) => new Promise((resolve, reject) => {
+    socket.timeout(3000).emit('newMessage', message, (err, response) => {
       if (response?.status === 'ok') resolve(response?.data);
       reject(new Error('generalErrors.network'));
     });
   });
-  // const addMessage = (message) => new Promise((resolve, reject) => {
-  //   socket.timeout(5000).emit('newMessage', message, (err, response) => {
-  //     if (err) {
-  //       reject();
-  //       return;
-  //     }
-  //     resolve(response);
-  //   });
-  // });
-  // const addChannel = (channel, cb) => {
-  //   socket.timeout(5000).emit('newChannel', channel, cb);
-  // };
-  // const renameChannel = (channel, cb) => {
-  //   socket.timeout(5000).emit('renameChannel', channel, cb);
-  // };
-  // const removeChannel = (id, cb) => {
-  //   socket.timeout(5000).emit('removeChannel', id, cb);
-  // };
+  const addChannel = (channel) => new Promise((resolve, reject) => {
+    socket.timeout(3000).emit('newChannel', channel, (err, response) => {
+      if (response?.status === 'ok') resolve(response?.data);
+      reject(new Error('generalErrors.network'));
+    });
+  });
+  const renameChannel = (channel) => new Promise((resolve, reject) => {
+    socket.timeout(3000).emit('renameChannel', channel, (err, response) => {
+      if (response?.status === 'ok') resolve(response?.data);
+      reject(new Error('generalErrors.network'));
+    });
+  });
+  const removeChannel = (id) => new Promise((resolve, reject) => {
+    socket.timeout(3000).emit('removeChannel', id, (err, response) => {
+      if (response?.status === 'ok') resolve();
+      reject(new Error('generalErrors.network'));
+    });
+  });
 
   const i18nextInstance = i18next.createInstance();
   await i18nextInstance
@@ -77,7 +76,10 @@ const initApp = async () => {
       <RollBarProvider config={rollbarConfig}>
         <ErrorBoundary>
           <ApiContext.Provider value={{
-            socketDecorator,
+            addMessage,
+            addChannel,
+            renameChannel,
+            removeChannel,
           }}
           >
             <Provider store={store}>

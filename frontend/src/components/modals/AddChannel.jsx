@@ -15,7 +15,7 @@ const AddChannel = () => {
   const rollbar = useRollbar();
   const { t } = useTranslation();
   const dispatch = useDispatch();
-  const { socketDecorator } = useApi();
+  const { addChannel } = useApi();
   const channels = useSelector(selectors.selectAll);
   const channelsNames = channels.map((channel) => channel.name);
   const channelSchema = yup
@@ -30,7 +30,7 @@ const AddChannel = () => {
     onSubmit: async (values) => {
       try {
         const filteredName = filter.clean(values.body);
-        const data = await socketDecorator('newChannel', { name: filteredName });
+        const data = await addChannel({ name: filteredName });
         console.log(data);
         const { id } = data;
         dispatch(channelsActions.setCurrentChannel(id));

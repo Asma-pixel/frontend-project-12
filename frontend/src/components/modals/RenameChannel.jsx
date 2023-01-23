@@ -15,7 +15,7 @@ const RenameChannel = () => {
   const rollbar = useRollbar();
   const { t } = useTranslation();
   const dispatch = useDispatch();
-  const { socketDecorator } = useApi();
+  const { renameChannel } = useApi();
   const channels = useSelector(selectors.selectAll);
   const { channel } = useSelector((state) => state.modalsReducer);
   const channelsNames = channels.map((item) => item.name);
@@ -32,7 +32,7 @@ const RenameChannel = () => {
     onSubmit: async (values) => {
       try {
         const filteredName = filter.clean(values.body);
-        await socketDecorator('renameChannel', { id: channel.id, name: filteredName });
+        await renameChannel({ id: channel.id, name: filteredName });
         toast.success(t('toast.renameChannelSuccess'));
       } catch (e) {
         rollbar.error(e);
